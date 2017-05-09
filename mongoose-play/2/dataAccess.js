@@ -22,7 +22,7 @@ DataAccess.prototype.getAll = function() {
     .catch(err => {
         console.error(err);
     });
-    console.log("After findOne");
+    console.log("After find");
 };
 
 DataAccess.prototype.getAuthor = function() {
