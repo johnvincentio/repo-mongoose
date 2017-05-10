@@ -40,6 +40,10 @@ var people = [
 {_id: 0, name: "a", age: 1}, {_id: 1, name: "b", age: 2}, {_id: 2, name: "c", age: 3}
 ];
 
+var stories = [
+{_creator: 0, title: 'title 0-1'}, {_creator: 0, title: 'title 0-2'}
+];
+
 var db = mongoose.connection;
 
 db.on("error", console.error.bind(console, "connection error"));
@@ -56,8 +60,21 @@ function test9() {
         .then(() => {
             makePromise(Person.create(people), 'create people')
             .then(() => {
-                makePromise(Person.create({_id: 3, name: "b", age: 20}), 'create person')
+                makePromise(Story.create(stories), 'create stories')
                 .then(() => {
+                    Story.find()
+                    .exec()
+                    .then(() => {
+                        Story.find()
+                        .populate('_creator')
+                        .exec()
+                        .then(doc => {
+                            doc.forEach(item => {
+                                console.log("(2) Found: "+item);
+                                console.log('The creator is %s', item._creator.name);
+                            });
+                        });
+                    });
                 });
             });
         });
@@ -82,23 +99,3 @@ function makePromise(func, text) {
         console.log("<<< makePromise");
     });
 }
-
-//var aaron = new Person({
-//    _id: 0,
-//    name: 'Aaron',
-//    age: 100
-//});
-//
-//aaron.save(function(err) {
-//    if (err) return handleError(err);
-//
-//    var story1 = new Story({
-//        title: "Once upon a timex.",
-//        _creator: aaron._id // assign the _id from the person
-//    });
-//
-//    story1.save(function(err) {
-//        if (err) return handleError(err);
-//        // thats it!
-//    });
-//});
