@@ -39,11 +39,9 @@ var Person = mongoose.model('Person', personSchema);
 var db = mongoose.connection;
 
 db.on("error", console.error.bind(console, "connection error"));
-db.once("open", function(callback) {
+db.once("open", function() {
     console.log("Connection succeeded.");
 });
-
-
 
 Story.remove().exec()
 .then(() => {
@@ -60,8 +58,6 @@ Person.remove().exec()
 .catch(err => {
     console.error(err);
 });
-
-// Locations1Model.create(LOCATIONS1.create(req.body))
 
 var aaron = new Person({
     _id: 0,
@@ -82,7 +78,6 @@ aaron.save(function(err) {
         // thats it!
     });
 });
-
 
 function handleError(err) {
     console.error("ERROR; "+err);
