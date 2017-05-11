@@ -18,41 +18,20 @@ MongoClient.connect("mongodb://localhost:27017/node-catalog", function(err, db) 
         if (err) {throw err;}
         console.log("Remove result :"+result);
 
-        db.collection("truck_categories").find().toArray(function(err, result) {
-            if (err) {throw err;}
+        let categories = [];
+        debugger;
+        console.log("stage 1");
+        var cursor1 = db.collection("truck_categories").find();
+        while (cursor1.hasNext()) {
+            console.log("stage 2");
+            categories.push(cursor1.next());
 
-            result.forEach((item) => {
-                item.image_url = handleUrl(item.image_url);
-
-                db.collection("truck_category_packages")
-                .find({package_category_id: item._id})
-                .sort({_id: 1})
-                .toArray(function(err, result) {
-                    if (err) {throw err;}
-
-                    result.forEach((sub) => {
-                        sub.image_1_url = handleUrl(sub.image_1_url);
-                        sub.image_2_url = handleUrl(sub.image_2_url);
-                        sub.image_3_url = handleUrl(sub.image_3_url);
-                        sub.image_4_url = handleUrl(sub.image_4_url);
-                        sub.image_5_url = handleUrl(sub.image_5_url);
-                        sub.image_6_url = handleUrl(sub.image_6_url);
-                        sub.image_7_url = handleUrl(sub.image_7_url);
-                        sub.image_8_url = handleUrl(sub.image_8_url);
-                    });
-
-                    item.items = result;
-
-                    db.collection("trucks")
-                    .insert(item, function(err, result) {
-                        if (err) {throw err;}
-                        console.log("insert result :"+result);
-                        db.close();
-                    });
-                });
-            });
-        });
+//            print(tojson(cursor1.next()));
+        }
+        console.log("stage 9");
+        let nope = '';
     });
+    console.log("stage 100");
 });
 
 function handleUrl(url) {
